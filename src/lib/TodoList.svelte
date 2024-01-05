@@ -7,8 +7,6 @@
 
 	function handleAddTodo() {
 		if (!inputText) return;
-		// todos.push({ id: uuidv4(), title: inputText, completed: false });
-		// todos = todos;
 		todos = [...todos, { id: uuidv4(), title: inputText, completed: false }];
 		inputText = '';
 	}
