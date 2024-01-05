@@ -1,10 +1,17 @@
 <script lang="ts">
 	import Button from './Button.svelte';
+	import { v4 as uuidv4 } from 'uuid';
 
 	export let todos = [];
 	let inputText = '';
 
-	function handleAddTodo() {}
+	function handleAddTodo() {
+		if (!inputText) return;
+		// todos.push({ id: uuidv4(), title: inputText, completed: false });
+		// todos = todos;
+		todos = [...todos, { id: uuidv4(), title: inputText, completed: false }];
+		inputText = '';
+	}
 </script>
 
 <div class="todo-list-wrapper">
@@ -16,7 +23,12 @@
 	</ul>
 	<form class="add-todo-form" on:submit|preventDefault={handleAddTodo}>
 		<input bind:value={inputText} />
-		{inputText}
-		<Button type="submit">Add</Button>
+		<Button type="submit" disabled={!inputText}>Add</Button>
 	</form>
 </div>
+
+<style lang="scss">
+	input {
+		color: #000;
+	}
+</style>
