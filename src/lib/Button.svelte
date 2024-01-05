@@ -11,6 +11,7 @@
 	class:shadow
 	style:--buttonBgColor={bgColor}
 	style:--buttonTextColor={textColor}
+	{...$$restProps}
 >
 	{#if $$slots.leftContent}
 		<div class="left-content">
@@ -49,6 +50,10 @@
 		}
 		&:active {
 			background-image: linear-gradient(rgba(255, 255, 255, 0.1) 0 0);
+		}
+		&:disabled {
+			cursor: not-allowed;
+			background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0 0);
 		}
 	}
 </style>
