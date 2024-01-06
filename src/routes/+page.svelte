@@ -34,9 +34,21 @@
 	function handleRemoveTodo(e) {
 		todos = todos.filter((todo) => todo.id !== e.detail.id);
 	}
+	function handleToggleTodo(e) {
+		todos = todos.map((todo) =>
+			todo.id === e.detail.id ? { ...todo, completed: e.detail.value } : { ...todo }
+		);
+		// todos = todos.map((todo) => (todo.id === e.detail.id ? { ...todo, completed: !todo.completed
+		// } : todo));
+	}
 </script>
 
-<TodoList {todos} on:addtodo={handleAddTodo} on:removetodo={handleRemoveTodo} />
+<TodoList
+	{todos}
+	on:addtodo={handleAddTodo}
+	on:removetodo={handleRemoveTodo}
+	on:toggletodo={handleToggleTodo}
+/>
 
 <style lang="scss">
 </style>
