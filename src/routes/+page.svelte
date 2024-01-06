@@ -19,11 +19,14 @@
 			completed: true
 		}
 	];
-	// $: console.log(todos);
+
+	function handleAddTodo(e) {
+		// e.preventDefault();
+		console.log(e.detail.title);
+	}
 </script>
 
-<h2>{todos.length} Todos</h2>
-<TodoList bind:todos />
+<TodoList {todos} on:addtodo={handleAddTodo} />
 
 <style lang="scss">
 </style>
