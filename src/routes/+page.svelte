@@ -22,7 +22,14 @@
 
 	function handleAddTodo(e) {
 		// e.preventDefault();
-		console.log(e.detail.title);
+		// console.log(e.detail.title);
+		// todos.push({
+		// 	id: uuidv4(),
+		// 	title: e.detail.title,
+		// 	completed: false
+		// });
+		// todos = todos;
+		todos = [...todos, { id: uuidv4(), title: e.detail.title, completed: false }];
 	}
 </script>
 
