@@ -5,7 +5,16 @@
 	import { createEventDispatcher } from 'svelte';
 
 	export let todos = [];
+	export const readOnly = 'read only';
+	export function clearInput() {
+		inputText = '';
+	}
+	export function focusInput() {
+		input.focus();
+	}
+
 	let inputText = '';
+	let input;
 
 	const dispatch = createEventDispatcher();
 
@@ -44,7 +53,7 @@
 		{/each}
 	</ul>
 	<form class="add-todo-form" on:submit|preventDefault={handleAddTodo}>
-		<input bind:value={inputText} />
+		<input bind:this={input} bind:value={inputText} />
 		<Button type="submit" disabled={!inputText}>Add</Button>
 	</form>
 </div>

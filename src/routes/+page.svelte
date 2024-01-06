@@ -2,6 +2,7 @@
 	import TodoList from '$lib/TodoList.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 
+	let todoList;
 	let todos = [
 		{
 			id: uuidv4(),
@@ -21,7 +22,7 @@
 	];
 
 	function handleAddTodo(e) {
-		// e.preventDefault();
+		e.preventDefault();
 		// console.log(e.detail.title);
 		// todos.push({
 		// 	id: uuidv4(),
@@ -29,7 +30,10 @@
 		// 	completed: false
 		// });
 		// todos = todos;
-		todos = [...todos, { id: uuidv4(), title: e.detail.title, completed: false }];
+		setTimeout(() => {
+			todos = [...todos, { id: uuidv4(), title: e.detail.title, completed: false }];
+			todoList.clearInput();
+		}, 1000);
 	}
 	function handleRemoveTodo(e) {
 		todos = todos.filter((todo) => todo.id !== e.detail.id);
@@ -45,10 +49,17 @@
 
 <TodoList
 	{todos}
+	bind:this={todoList}
 	on:addtodo={handleAddTodo}
 	on:removetodo={handleRemoveTodo}
 	on:toggletodo={handleToggleTodo}
 />
+
+<button
+	on:click={() => {
+		todoList.focusInput();
+	}}>Focus Input</button
+>
 
 <style lang="scss">
 </style>
