@@ -31,9 +31,12 @@
 		// todos = todos;
 		todos = [...todos, { id: uuidv4(), title: e.detail.title, completed: false }];
 	}
+	function handleRemoveTodo(e) {
+		todos = todos.filter((todo) => todo.id !== e.detail.id);
+	}
 </script>
 
-<TodoList {todos} on:addtodo={handleAddTodo} />
+<TodoList {todos} on:addtodo={handleAddTodo} on:removetodo={handleRemoveTodo} />
 
 <style lang="scss">
 </style>
