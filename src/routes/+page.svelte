@@ -45,6 +45,8 @@
 		// todos = todos.map((todo) => (todo.id === e.detail.id ? { ...todo, completed: !todo.completed
 		// } : todo));
 	}
+
+	$: console.log(todos);
 </script>
 
 <TodoList
