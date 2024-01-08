@@ -21,22 +21,19 @@
 			id: uuidv4(),
 			title: 'Todo 3',
 			completed: true
+		},
+		{
+			id: uuidv4(),
+			title:
+				'A very very very very very very very very very very very very very very long long long long long long long long long long long long long long long todo',
+			completed: true
 		}
 	];
 
 	async function handleAddTodo(e) {
 		e.preventDefault();
-		// console.log(e.detail.title);
-		// todos.push({
-		// 	id: uuidv4(),
-		// 	title: e.detail.title,
-		// 	completed: false
-		// });
-		// todos = todos;
-		console.log(document.querySelectorAll('.todo-list ul li'));
 		todos = [...todos, { id: uuidv4(), title: e.detail.title, completed: false }];
 		await tick();
-		console.log(document.querySelectorAll('.todo-list ul li'));
 		todoList.clearInput();
 	}
 	function handleRemoveTodo(e) {

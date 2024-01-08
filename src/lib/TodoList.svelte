@@ -3,27 +3,19 @@
 <script lang="ts">
 	import Layout from '../routes/+layout.svelte';
 	import Button from './Button.svelte';
-	import { createEventDispatcher, onMount, onDestroy, beforeUpdate, afterUpdate } from 'svelte';
+	import { createEventDispatcher, afterUpdate } from 'svelte';
+	import Icon from '@iconify/svelte';
 
-	onMount(() => {
-		console.log('Component mounted');
-		return () => {
-			console.log('Component destroyed in onMount');
-		};
-	});
-	onDestroy(() => {
-		console.log('Component destroyed');
-	});
-	beforeUpdate(() => {
-		if (listDiv) {
-			console.log(listDiv.offsetHeight);
-		}
-	});
 	afterUpdate(() => {
 		console.log(listDiv.offsetHeight);
 		if (autoScroll) listDiv.scrollTo(0, listDivScrollHeight);
 		autoScroll = false;
 	});
+
+	let inputText = '';
+	let input, listDiv, listDivScrollHeight;
+	let autoScroll: boolean;
+	const dispatch = createEventDispatcher();
 
 	export let todos = [];
 	let prevTodos = todos;
@@ -40,12 +32,6 @@
 	export function focusInput() {
 		input.focus();
 	}
-
-	let inputText = '';
-	let input, listDiv, listDivScrollHeight;
-	let autoScroll: boolean;
-
-	const dispatch = createEventDispatcher();
 
 	function handleAddTodo() {
 		const isNotCancelled = dispatch('addtodo', { title: inputText }, { cancelable: true });
@@ -66,29 +52,33 @@
 <div class="todo-list-wrapper">
 	<div class="todo-list" bind:this={listDiv}>
 		<div bind:offsetHeight={listDivScrollHeight}>
-			<ul>
-				{#each todos as { id, title, completed } (id)}
-					<!-- {(console.log(title), '')} -->
-					<!-- {@debug id, title} -->
-					<li>
-						<label>
-							<input
-								on:input={(event) => {
-									event.currentTarget.checked = completed;
-									handleToggleTodo(id, !completed);
-								}}
-								type="checkbox"
-								checked={completed}
-							/>{title}
-						</label>
-						<button on:click={() => handleRemoveTodo(id)}>Remove</button>
-					</li>
-				{/each}
-			</ul>
+			{#if todos.length === 0}
+				<p class="no-items-text">No todos yet</p>
+			{:else}
+				<ul>
+					{#each todos as { id, title, completed } (id)}
+						<li class:completed>
+							<label>
+								<input
+									on:input={(event) => {
+										event.currentTarget.checked = completed;
+										handleToggleTodo(id, !completed);
+									}}
+									type="checkbox"
+									checked={completed}
+								/>{title}
+							</label>
+							<button aria-label="Remove todo: {title}" on:click={() => handleRemoveTodo(id)}
+								><Icon icon="line-md:remove" /></button
+							>
+						</li>
+					{/each}
+				</ul>
+			{/if}
 		</div>
 	</div>
 	<form class="add-todo-form" on:submit|preventDefault={handleAddTodo}>
-		<input bind:this={input} bind:value={inputText} />
+		<input bind:this={input} bind:value={inputText} placeholder="New todo" />
 		<Button type="submit" disabled={!inputText}>Add</Button>
 	</form>
 </div>
