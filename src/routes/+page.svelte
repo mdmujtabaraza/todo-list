@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TodoList from '$lib/TodoList.svelte';
 	import { v4 as uuidv4 } from 'uuid';
+	import { tick } from 'svelte';
 
 	let todoList;
 	let showList = true;
@@ -23,7 +24,7 @@
 		}
 	];
 
-	function handleAddTodo(e) {
+	async function handleAddTodo(e) {
 		e.preventDefault();
 		// console.log(e.detail.title);
 		// todos.push({
@@ -32,7 +33,10 @@
 		// 	completed: false
 		// });
 		// todos = todos;
+		console.log(document.querySelectorAll('.todo-list ul li'));
 		todos = [...todos, { id: uuidv4(), title: e.detail.title, completed: false }];
+		await tick();
+		console.log(document.querySelectorAll('.todo-list ul li'));
 		todoList.clearInput();
 	}
 	function handleRemoveTodo(e) {
