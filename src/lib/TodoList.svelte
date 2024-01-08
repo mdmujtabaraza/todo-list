@@ -1,6 +1,7 @@
 <svelte:options immutable={true} />
 
 <script lang="ts">
+	import Layout from '../routes/+layout.svelte';
 	import Button from './Button.svelte';
 	import { createEventDispatcher, onMount, onDestroy, beforeUpdate, afterUpdate } from 'svelte';
 
@@ -20,10 +21,19 @@
 	});
 	afterUpdate(() => {
 		console.log(listDiv.offsetHeight);
+		if (autoScroll) listDiv.scrollTo(0, listDiv.scrollHeight);
+		autoScroll = false;
 	});
 
 	export let todos = [];
-	export const readOnly = 'read only';
+	let prevTodos = todos;
+
+	$: {
+		// console.log(prevTodos, todos);
+		autoScroll = todos.length > prevTodos.length;
+		prevTodos = todos;
+	}
+
 	export function clearInput() {
 		inputText = '';
 	}
@@ -33,6 +43,7 @@
 
 	let inputText = '';
 	let input, listDiv;
+	let autoScroll: boolean;
 
 	const dispatch = createEventDispatcher();
 
@@ -83,5 +94,9 @@
 <style lang="scss">
 	input {
 		color: #000;
+	}
+	.todo-list {
+		max-height: 150px;
+		overflow: auto;
 	}
 </style>
