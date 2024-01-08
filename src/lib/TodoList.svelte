@@ -21,7 +21,7 @@
 	});
 	afterUpdate(() => {
 		console.log(listDiv.offsetHeight);
-		if (autoScroll) listDiv.scrollTo(0, listDiv.scrollHeight);
+		if (autoScroll) listDiv.scrollTo(0, listDivScrollHeight);
 		autoScroll = false;
 	});
 
@@ -42,7 +42,7 @@
 	}
 
 	let inputText = '';
-	let input, listDiv;
+	let input, listDiv, listDivScrollHeight;
 	let autoScroll: boolean;
 
 	const dispatch = createEventDispatcher();
@@ -65,25 +65,27 @@
 
 <div class="todo-list-wrapper">
 	<div class="todo-list" bind:this={listDiv}>
-		<ul>
-			{#each todos as { id, title, completed } (id)}
-				<!-- {(console.log(title), '')} -->
-				<!-- {@debug id, title} -->
-				<li>
-					<label>
-						<input
-							on:input={(event) => {
-								event.currentTarget.checked = completed;
-								handleToggleTodo(id, !completed);
-							}}
-							type="checkbox"
-							checked={completed}
-						/>{title}
-					</label>
-					<button on:click={() => handleRemoveTodo(id)}>Remove</button>
-				</li>
-			{/each}
-		</ul>
+		<div bind:offsetHeight={listDivScrollHeight}>
+			<ul>
+				{#each todos as { id, title, completed } (id)}
+					<!-- {(console.log(title), '')} -->
+					<!-- {@debug id, title} -->
+					<li>
+						<label>
+							<input
+								on:input={(event) => {
+									event.currentTarget.checked = completed;
+									handleToggleTodo(id, !completed);
+								}}
+								type="checkbox"
+								checked={completed}
+							/>{title}
+						</label>
+						<button on:click={() => handleRemoveTodo(id)}>Remove</button>
+					</li>
+				{/each}
+			</ul>
+		</div>
 	</div>
 	<form class="add-todo-form" on:submit|preventDefault={handleAddTodo}>
 		<input bind:this={input} bind:value={inputText} />
