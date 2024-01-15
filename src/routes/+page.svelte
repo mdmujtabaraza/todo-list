@@ -6,29 +6,18 @@
 	let todoList;
 	let showList = true;
 
-	let todos = [
-		{
-			id: uuidv4(),
-			title: 'Todo 1',
-			completed: true
-		},
-		{
-			id: uuidv4(),
-			title: 'Todo 2',
-			completed: false
-		},
-		{
-			id: uuidv4(),
-			title: 'Todo 3',
-			completed: true
-		},
-		{
-			id: uuidv4(),
-			title:
-				'A very very very very very very very very very very very very very very long long long long long long long long long long long long long long long todo',
-			completed: true
-		}
-	];
+	let todos = null;
+	let promise = loadTodos();
+
+	function loadTodos() {
+		return fetch('https://jsonplaceholder.typicode.com/todos?_limit=10').then((response) => {
+			if (response.ok) {
+				return response.json();
+			} else {
+				throw new Error('An error has occured.');
+			}
+		});
+	}
 
 	async function handleAddTodo(e) {
 		e.preventDefault();
@@ -53,15 +42,26 @@
 	Show/Hide list
 </label>
 {#if showList}
-	<div style:max-width="400px">
-		<TodoList
-			{todos}
-			bind:this={todoList}
-			on:addtodo={handleAddTodo}
-			on:removetodo={handleRemoveTodo}
-			on:toggletodo={handleToggleTodo}
-		/>
-	</div>
+	{#await promise}
+		<p>Loading...</p>
+	{:then todos}
+		<div style:max-width="400px">
+			<TodoList
+				{todos}
+				bind:this={todoList}
+				on:addtodo={handleAddTodo}
+				on:removetodo={handleRemoveTodo}
+				on:toggletodo={handleToggleTodo}
+			/>
+		</div>
+	{:catch error}
+		<p>{error.message || 'An error has occurred'}</p>
+	{/await}
+	<button
+		on:click={() => {
+			promise = loadTodos();
+		}}>Refresh</button
+	>
 {/if}
 
 <style lang="scss">
