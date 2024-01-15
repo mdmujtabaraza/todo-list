@@ -108,7 +108,27 @@
 			on:addtodo={handleAddTodo}
 			on:removetodo={handleRemoveTodo}
 			on:toggletodo={handleToggleTodo}
-		/>
+			let:todo
+			let:handleToggleTodo
+			let:index
+		>
+			{@const { id, completed, title } = todo}
+			{@const temp_index = index}
+			<svelte:fragment slot="title">{temp_index + 1} - {temp_todo.title}</svelte:fragment>
+			<!-- <Todo {todo} on:remove on:toggle> -->
+			<div>
+				<input
+					disabled={disabledItems.includes(id)}
+					on:input={(event) => {
+						event.currentTarget.checked = completed;
+						handleToggleTodo(id, !completed);
+					}}
+					type="checkbox"
+					checked={completed}
+				/>
+				{title}
+			</div>
+		</TodoList>
 	</div>
 {/if}
 

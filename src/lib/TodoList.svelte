@@ -65,26 +65,31 @@
 					<p class="state-text">No todos yet</p>
 				{:else}
 					<ul>
-						{#each todos as { id, title, completed } (id)}
-							<li class:completed>
-								<label>
-									<input
-										disabled={disabledItems.includes(id)}
-										on:input={(event) => {
-											event.currentTarget.checked = completed;
-											handleToggleTodo(id, !completed);
-										}}
-										type="checkbox"
-										checked={completed}
-									/>{title}
-								</label>
-								<button
-									disabled={disabledItems.includes(id)}
-									class="remove-todo-button"
-									aria-label="Remove todo: {title}"
-									on:click={() => handleRemoveTodo(id)}
-									><Icon icon="line-md:close-circle-twotone" color="#bd1414" /></button
-								>
+						{#each todos as todo, index (todo.id)}
+							{@const { id, title, completed } = todo}
+							<li>
+								<slot {todo} {index} {handleToggleTodo}>
+									<div class:completed>
+										<label>
+											<input
+												disabled={disabledItems.includes(id)}
+												on:input={(event) => {
+													event.currentTarget.checked = completed;
+													handleToggleTodo(id, !completed);
+												}}
+												type="checkbox"
+												checked={completed}
+											/><slot name="title">{title}</slot>
+										</label>
+										<button
+											disabled={disabledItems.includes(id)}
+											class="remove-todo-button"
+											aria-label="Remove todo: {title}"
+											on:click={() => handleRemoveTodo(id)}
+											><Icon icon="line-md:close-circle-twotone" color="#bd1414" /></button
+										>
+									</div>
+								</slot>
 							</li>
 						{/each}
 					</ul>
@@ -124,7 +129,7 @@
 				// margin: 0;
 				// list-style: none;
 				padding: 10px;
-				li {
+				li > div {
 					margin-bottom: 5px;
 					display: flex;
 					align-items: center;
