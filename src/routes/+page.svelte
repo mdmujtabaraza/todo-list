@@ -10,6 +10,7 @@
 	let error = null;
 	let isLoading = false;
 	let isAdding = false;
+	let disabledItems = [];
 
 	onMount(() => {
 		loadTodos();
@@ -50,8 +51,20 @@
 		await tick();
 		todoList.focusInput();
 	}
-	function handleRemoveTodo(e) {
-		todos = todos.filter((todo) => todo.id !== e.detail.id);
+	async function handleRemoveTodo(e) {
+		const id = e.detail.id;
+		if (disabledItems.includes(id)) return;
+		disabledItems = [...disabledItems, id];
+		await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+			method: 'DELETE'
+		}).then((response) => {
+			if (response.ok) {
+				todos = todos.filter((todo) => todo.id !== e.detail.id);
+			} else {
+				alert('An error occurred');
+			}
+		});
+		disabledItems = disabledItems.filter((item) => item !== id);
 	}
 	function handleToggleTodo(e) {
 		todos = todos.map((todo) =>
@@ -72,6 +85,7 @@
 			{todos}
 			{error}
 			{isLoading}
+			{disabledItems}
 			disableAdding={isAdding}
 			bind:this={todoList}
 			on:addtodo={handleAddTodo}
