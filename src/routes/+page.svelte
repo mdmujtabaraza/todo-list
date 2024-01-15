@@ -66,10 +66,27 @@
 		});
 		disabledItems = disabledItems.filter((item) => item !== id);
 	}
-	function handleToggleTodo(e) {
-		todos = todos.map((todo) =>
-			todo.id === e.detail.id ? { ...todo, completed: e.detail.value } : { ...todo }
-		);
+	async function handleToggleTodo(e) {
+		const id = e.detail.id;
+		const value = e.detail.value;
+		if (disabledItems.includes(id)) return;
+		disabledItems = [...disabledItems, id];
+		await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+			method: 'PATCH',
+			body: JSON.stringify({
+				completed: value
+			}),
+			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+		}).then(async (response) => {
+			if (response.ok) {
+				const updatedTodo = await response.json();
+				todos = todos.map((todo) => (todo.id === id ? updatedTodo : { ...todo }));
+			} else {
+				alert('An error occurred');
+			}
+		});
+		disabledItems = disabledItems.filter((item) => item !== id);
+
 		// todos = todos.map((todo) => (todo.id === e.detail.id ? { ...todo, completed: !todo.completed
 		// } : todo));
 	}

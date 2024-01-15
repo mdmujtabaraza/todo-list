@@ -141,6 +141,9 @@
 						input[type='checkbox'] {
 							margin: 0 10px 0 0;
 							cursor: pointer;
+							&:disabled {
+								cursor: not-allowed;
+							}
 						}
 					}
 					&.completed > label {
