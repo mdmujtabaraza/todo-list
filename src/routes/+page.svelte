@@ -9,6 +9,7 @@
 	let todos = null;
 	let error = null;
 	let isLoading = false;
+	let isAdding = false;
 
 	onMount(() => {
 		loadTodos();
@@ -28,9 +29,26 @@
 
 	async function handleAddTodo(e) {
 		e.preventDefault();
-		todos = [...todos, { id: uuidv4(), title: e.detail.title, completed: false }];
+		isAdding = true;
+		await fetch('https://jsonplaceholder.typicode.com/todos', {
+			method: 'POST',
+			body: JSON.stringify({
+				title: e.detail.title,
+				completed: false
+			}),
+			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+		}).then(async (response) => {
+			if (response.ok) {
+				const todo = await response.json();
+				todos = [...todos, { ...todo, id: uuidv4() }];
+				todoList.clearInput();
+			} else {
+				alert('An error occurred');
+			}
+		});
+		isAdding = false;
 		await tick();
-		todoList.clearInput();
+		todoList.focusInput();
 	}
 	function handleRemoveTodo(e) {
 		todos = todos.filter((todo) => todo.id !== e.detail.id);
@@ -54,6 +72,7 @@
 			{todos}
 			{error}
 			{isLoading}
+			disableAdding={isAdding}
 			bind:this={todoList}
 			on:addtodo={handleAddTodo}
 			on:removetodo={handleRemoveTodo}
